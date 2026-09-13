@@ -72,25 +72,22 @@ export default function PearlRingModel({
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
-    if (isMobile) {
-      // Smooth continuous front view auto-spin on Y axis
-      groupRef.current.rotation.y += delta * 0.5;
-      groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.8) * 0.08;
-      groupRef.current.rotation.z = Math.cos(state.clock.getElapsedTime() * 0.5) * 0.04;
-    } else {
-      // Direct front portrait view: ring band circle faces forward, rotating on vertical Y axis with scroll
-      const targetRotX = Math.sin(scrollProgress * Math.PI) * 0.12 + state.pointer.y * 0.15; // Upright front orientation
-      const targetRotY = scrollProgress * Math.PI * 2.5 + state.pointer.x * 0.35; // 360 rotation around Y axis
-      const targetRotZ = Math.sin(scrollProgress * Math.PI * 2) * 0.05;
+    // Direct front portrait view: scroll progress drives 360 degree rotation on both mobile & desktop
+    const speedMultiplier = isMobile ? 3.2 : 2.5;
+    const pointerXWeight = state.pointer ? state.pointer.x * 0.35 : 0;
+    const pointerYWeight = state.pointer ? state.pointer.y * 0.15 : 0;
 
-      // Smooth lerp easing for quiet luxury feel
-      groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.08;
-      groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.08;
-      groupRef.current.rotation.z += (targetRotZ - groupRef.current.rotation.z) * 0.08;
+    const targetRotY = scrollProgress * Math.PI * speedMultiplier + pointerXWeight;
+    const targetRotX = Math.sin(scrollProgress * Math.PI) * 0.14 + pointerYWeight;
+    const targetRotZ = Math.sin(scrollProgress * Math.PI * 2) * 0.05;
 
-      // Gentle floating oscillation
-      groupRef.current.position.y = -0.42 + Math.sin(state.clock.getElapsedTime() * 1.2) * 0.04;
-    }
+    // Smooth lerp easing for quiet luxury motion
+    groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.08;
+    groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.08;
+    groupRef.current.rotation.z += (targetRotZ - groupRef.current.rotation.z) * 0.08;
+
+    // Gentle floating oscillation
+    groupRef.current.position.y = -0.42 + Math.sin(state.clock.getElapsedTime() * 1.2) * 0.04;
   });
 
   return (

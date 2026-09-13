@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, Environment, Float } from "@react-three/drei";
+import { ContactShadows, Environment, Float, OrbitControls } from "@react-three/drei";
 import PearlRingModel from "./PearlRingModel";
 
 interface RingCanvasProps {
@@ -71,6 +71,14 @@ export default function RingCanvas({
             scrollProgress={scrollProgress}
             finish={finish}
             isMobile={isMobile}
+          />
+
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            rotateSpeed={0.7}
+            dampingFactor={0.05}
+            enableDamping={true}
           />
 
           <ContactShadows
