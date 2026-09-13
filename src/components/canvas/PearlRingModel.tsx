@@ -50,7 +50,6 @@ export default function PearlRingModel({
       steps: 120,
       bevelEnabled: true,
       bevelSegments: 8,
-      steps: 120,
       bevelSize: 0.02,
       bevelThickness: 0.02,
       extrudePath: new THREE.CatmullRomCurve3(
